@@ -1,4 +1,4 @@
-import json
+import json, MySQLdb
 from flask import Flask, jsonify, abort, request
 
 app = Flask(__name__, static_url_path="/static")
