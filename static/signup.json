@@ -1,0 +1,20 @@
+{
+    "userName":"user",
+    "password":"pass",
+    "email":"email",
+    "givenName":"firstname",
+    "familyName":"lastname",
+    "country":"country",
+    "province":"province",
+    "city":"city",
+    "visualAccessibility":true,
+    "hearingAccessibility":true,
+    "motorAccessibility":true,
+    "cognitiveAccessibility":true,
+    "teamCaptain":false,
+    "teamName":"",
+    "member1":"",
+    "member2":"",
+    "member3":"",
+    "member4":""
+}
