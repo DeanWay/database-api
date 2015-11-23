@@ -1,0 +1,12 @@
+{
+    "userID":1,
+    "teamID":1,
+    "teamName":"teamName",
+    "newTeamName":"newTeamName",
+    "newTeamAccessibility":false,
+    "newVisualAccessibility":true,
+    "newHearingAccessibility":false,
+    "newMotorAccessibility":false,
+    "newCognitiveAccessibility":false,
+    "newTeamViewable":false
+}

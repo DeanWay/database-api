@@ -162,14 +162,14 @@ def login_user():
 # delete user request
 @app.route("/api/v1.0/users/manage/delete/", methods=["DELETE"])
 def delete_user():
-    delete_dict = request.get_json(silent=True) # POST request body
+    deleteUser_dict = request.get_json(silent=True) # POST request body
 
     # 400 error check for required fields
-    if not isinstance(delete_dict["userID"], int):
+    if not isinstance(deleteUser_dict["userID"], int):
         abort(400)
-    if(delete_dict["userName"] == ""):
+    if(deleteUser_dict["userName"] == ""):
         abort(400)
-    if(delete_dict["password"] == ""):
+    if(deleteUser_dict["password"] == ""):
         abort(400)
 
     # 403 error check if user id in database match
@@ -182,10 +182,10 @@ def delete_user():
 # modify user request
 @app.route("/api/v1.0/users/manage/edit/", methods=["PUT"])
 def modify_user():
-    modify_dict = request.get_json(silent=True) # POST request body
+    modifyUser_dict = request.get_json(silent=True) # POST request body
 
     # 400 error check for required fields
-    if not isinstance(modify_dict["userID"], int):
+    if not isinstance(modifyUser_dict["userID"], int):
         abort(400)
 
     # 403 error check if user id in database match
@@ -256,15 +256,15 @@ def join_route():
 
     return jsonify({"success":True}), 200, {"ContentType":"application/json"}
 
-#Modify Team
-@app.route("/api/v1.0/teams/teamaccounts/edit", methods=["PUT"])
+# modify team
+@app.route("/api/v1.0/teams/teamaccounts/edit/", methods=["PUT"])
 def modify_team():
     modifyTeam_dict = request.get_json(silent=True) # POST request body
-
+    
     # 400 error check for required fields
-    if(modifyTeam_dict["userID"] == ""):
+    if not isinstance(modifyTeam_dict["userID"], int):
         abort(400)
-    if(modifyTeam_dict["teamID"] == ""):
+    if not isinstance(modifyTeam_dict["teamID"], int):
         abort(400)
     if(modifyTeam_dict["teamName"] == ""):
         abort(400)
@@ -281,11 +281,11 @@ def join_team():
     joinTeam_dict = request.get_json(silent=True) # POST request body
 
     # 400 error check for required fields
-    if(joinTeam_dict["userID"] == ""):
+    if not isinstance(joinTeam_dict["userID"], int):
         abort(400)
     if(joinTeam_dict["userName"] == ""):
         abort(400)
-    if(joinTeam_dict["teamID"] == ""):
+    if not isinstance(joinTeam_dict["teamID"], int):
         abort(400)
     if(joinTeam_dict["teamName"] == ""):
         abort(400)
@@ -301,7 +301,7 @@ def join_team():
     joinTeam_response["teamID"] = ""
     joinTeam_response["teamViewable"] = ""
     joinTeam_response["teamAccessibility"] = ""
-    joinTeamh_response["teamCaptainName"] = ""
+    joinTeam_response["teamCaptainName"] = ""
     joinTeam_response["member1"] = ""
     joinTeam_response["member2"] = ""
     joinTeam_response["member3"] = ""
@@ -315,13 +315,13 @@ def delete_team():
     deleteTeam_dict = request.get_json(silent=True) # POST request body
 
     # 400 error check for required fields
-    if(deleteTeam_dict["userID"] == ""):
+    if not isinstance(deleteTeam_dict["userID"], int):
         abort(400)
     if(deleteTeam_dict["userName"] == ""):
         abort(400)
     if(deleteTeam_dict["password"] == ""):
         abort(400)
-    if(deleteTeam_dict["teamID"] == ""):
+    if not isinstance(deleteTeam_dict["teamID"], int):
         abort(400)
     if(deleteTeam_dict["teamName"] == ""):
         abort(400)
@@ -356,8 +356,6 @@ def leave_team():
     return jsonify({"success":True}), 200, {"ContentType":"application/json"}
 
 # THE FOLLOWING ARE PURELY FOR EXAMPLES OF USING FLASK FOR INTERACTING WITH A DICTIONARY #
-
-# temporary user dictionary for api testing purposes
 users = [
     {
         "id": 1,
