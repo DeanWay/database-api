@@ -70,6 +70,10 @@ def signup_user():
     if(signup_dict["teamCaptain"] == True):
         if(signup_dict["teamName"] == ""):
             abort(400)
+        if not isinstance(signup_dict["teamViewable"], bool):               #Required from requirements, but forgot to include
+            abort(400)
+        if not isinstance(signup_dict["teamAccessibility"], bool):          #Team Accessibility =/= Individual Accessibility
+            abort(400)
         if(signup_dict["member1"] == ""):
             abort(400)
         if(signup_dict["member2"] == ""):
@@ -84,7 +88,7 @@ def signup_user():
     # POST response body pulled from database
     signup_response = {}
     signup_response["userType"] = ""
-    signup_response["userId"] = ""
+    signup_response["userID"] = ""
     signup_response["userName"] = ""
     signup_response["password"] = ""
     signup_response["email"] = ""
@@ -99,12 +103,16 @@ def signup_user():
     signup_response["cognitiveAccessibility"] = ""
     signup_response["teamCaptain"] = ""
     signup_response["teamName"] = ""
+    signup_response["teamID"] = ""                              #Added this since Team Name can be changed.
+    signup_response["teamViewable"] = ""
+    signup_response["teamAccessibility"] = ""
+    signup_response["teamCaptainName"] = ""                     #The signup may be participant
     signup_response["member1"] = ""
     signup_response["member2"] = ""
     signup_response["member3"] = ""
     signup_response["member4"] = ""
 
-    return jsonify(signup_response), 200
+    return jsonify(signup_response), 200, {"ContentType":"application/json"}
 
 # log in user request
 @app.route("/api/v1.0/users/accounts/login/", methods=["POST"])
@@ -125,7 +133,7 @@ def login_user():
     # POST response body pulled from database
     login_response = {}
     login_response["userType"] = ""
-    login_response["userId"] = ""
+    login_response["userID"] = ""
     login_response["userName"] = ""
     login_response["password"] = ""
     login_response["email"] = ""
@@ -138,6 +146,16 @@ def login_user():
     login_response["hearingAccessibility"] = ""
     login_response["motorAccessibility"] = ""
     login_response["cognitiveAccessibility"] = ""
+    login_response["teamCaptain"] = ""
+    login_response["teamName"] = ""
+    login_response["teamID"] = ""                              #Added this since Team Name can be changed.
+    login_response["teamViewable"] = ""
+    login_response["teamAccessibility"] = ""
+    login_response["teamCaptainName"] = ""                     #The signup may be participant
+    login_response["member1"] = ""
+    login_response["member2"] = ""
+    login_response["member3"] = ""
+    login_response["member4"] = ""
 
     return jsonify(login_response), 200, {"ContentType":"application/json"} 
 
@@ -159,7 +177,7 @@ def delete_user():
     # ------------------ #
     #                    #
 
-    return jsonify({"success":True})
+    return jsonify({"success":True}), 200, {"ContentType":"application/json"}
 
 # modify user request
 @app.route("/api/v1.0/users/manage/edit/", methods=["PUT"])
@@ -167,7 +185,7 @@ def modify_user():
     modify_dict = request.get_json(silent=True) # POST request body
 
     # 400 error check for required fields
-    if not isinstance(modify_dict["userId"], int):
+    if not isinstance(modify_dict["userID"], int):
         abort(400)
 
     # 403 error check if user id in database match
@@ -175,9 +193,166 @@ def modify_user():
     # ------------------ #
     #                    #
 
-    return jsonify({"success":True})
+    return jsonify({"success":True}), 200, {"ContentType":"application/json"}
 
 
+#Search Routes
+@app.route("/api/v1.0/routes/manage/search[?parameters]", methods=["GET"])
+def search_routes():
+    search_dict = request.get_json(silent=True) # POST request body
+
+    # 400 error check for required fields
+    #I'm not sure how to deal with this
+
+    # 403 error check if creating user id in database match
+    # do MySQL work here #
+    # ------------------ #
+    #                    #
+
+    # GET response body pulled from database
+    search_response = {}
+    search_response["routeName"] = ""
+    search_response["routeID"] = ""
+    search_response["creatingUserID"] = ""
+    search_response["teamNames"] = ""
+    search_response["routeType"] = ""
+    search_response["busID"] = ""
+    search_response["busTime1"] = ""
+    search_response["busTime2"] = ""
+    search_response["startLat"] = ""
+    search_response["startLong"] = ""
+    search_response["midLat"] = ""
+    search_response["midLong"] = ""
+    search_response["endLat"] = ""
+    search_response["endLong"] = ""
+    search_response["visualAccessibility"] = ""
+    search_response["hearingAccessibility"] = ""
+    search_response["motorAccessibility"] = ""
+    search_response["cognitiveAccessibility"] = ""
+
+    return jsonify(search_response), 200, {"ContentType":"application/json"}
+
+#Join Route
+@app.route("/api/v1.0/routes/manage/join", methods=["PUT"])
+def join_route():
+    joinRoute_dict = request.get_json(silent=True) # POST request body
+
+    # 400 error check for required fields
+    if(joinRoute_dict["routeName"] == ""):
+        abort(400)
+    if(joinRoute_dict["routeID"] == ""):
+        abort(400)
+    if(joinRoute_dict["creatingUserID"] == ""):
+        abort(400)
+    if(joinRoute_dict["userID"] == ""):
+        abort(400)
+    if(joinRoute_dict["teamID"] == ""):
+        abort(400)
+
+    # do MySQL work here #
+    # ------------------ #
+    #                    #
+
+    return jsonify({"success":True}), 200, {"ContentType":"application/json"}
+
+#Modify Team
+@app.route("/api/v1.0/teams/teamaccounts/edit", methods=["PUT"])
+def modify_team():
+    modifyTeam_dict = request.get_json(silent=True) # POST request body
+
+    # 400 error check for required fields
+    if(modifyTeam_dict["userID"] == ""):
+        abort(400)
+    if(modifyTeam_dict["teamID"] == ""):
+        abort(400)
+    if(modifyTeam_dict["teamName"] == ""):
+        abort(400)
+
+    # do MySQL work here #
+    # ------------------ #
+    #                    #
+
+    return jsonify({"success":True}), 200, {"ContentType":"application/json"}
+
+#Join Team
+@app.route("/api/v1.0/teams/teamaccounts/join", methods=["PUT"])
+def join_team():
+    joinTeam_dict = request.get_json(silent=True) # POST request body
+
+    # 400 error check for required fields
+    if(joinTeam_dict["userID"] == ""):
+        abort(400)
+    if(joinTeam_dict["userName"] == ""):
+        abort(400)
+    if(joinTeam_dict["teamID"] == ""):
+        abort(400)
+    if(joinTeam_dict["teamName"] == ""):
+        abort(400)
+
+    # do MySQL work here #
+    # ------------------ #
+    #                    #
+
+    # POST response body pulled from database
+    joinTeam_response = {}
+    joinTeam_response["teamCaptain"] = ""
+    joinTeam_response["teamName"] = ""
+    joinTeam_response["teamID"] = ""
+    joinTeam_response["teamViewable"] = ""
+    joinTeam_response["teamAccessibility"] = ""
+    joinTeamh_response["teamCaptainName"] = ""
+    joinTeam_response["member1"] = ""
+    joinTeam_response["member2"] = ""
+    joinTeam_response["member3"] = ""
+    joinTeam_response["member4"] = ""
+
+    return jsonify(joinTeam_response), 200, {"ContentType":"application/json"}
+
+#Delete Team
+@app.route("/api/v1.0/teams/teamaccounts/delete", methods=["DELETE"])
+def delete_team():
+    deleteTeam_dict = request.get_json(silent=True) # POST request body
+
+    # 400 error check for required fields
+    if(deleteTeam_dict["userID"] == ""):
+        abort(400)
+    if(deleteTeam_dict["userName"] == ""):
+        abort(400)
+    if(deleteTeam_dict["password"] == ""):
+        abort(400)
+    if(deleteTeam_dict["teamID"] == ""):
+        abort(400)
+    if(deleteTeam_dict["teamName"] == ""):
+        abort(400)
+
+    # do MySQL work here #
+    # ------------------ #
+    #                    #
+
+    return jsonify({"success":True}), 200, {"ContentType":"application/json"}
+
+#Leave Team
+@app.route("/api/v1.0/teams/teamaccounts/leave", methods=["PUT"])
+def leave_team():
+    leaveTeam_dict = request.get_json(silent=True) # POST request body
+
+    # 400 error check for required fields
+    if(leaveTeam_dict["userID"] == ""):
+        abort(400)
+    if(leaveTeam_dict["userName"] == ""):
+        abort(400)
+    if(leaveTeam_dict["password"] == ""):
+        abort(400)
+    if(leaveTeam_dict["teamID"] == ""):
+        abort(400)
+    if(leaveTeam_dict["teamName"] == ""):
+        abort(400)
+
+    # do MySQL work here #
+    # ------------------ #
+    #                    #
+
+    return jsonify({"success":True}), 200, {"ContentType":"application/json"}
 
 # THE FOLLOWING ARE PURELY FOR EXAMPLES OF USING FLASK FOR INTERACTING WITH A DICTIONARY #
 
