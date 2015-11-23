@@ -1,0 +1,16 @@
+{
+    "userId":1,
+    "newPassword":"optional String",
+    "newEmail":"optional String",
+    "newGivenName":"optional String",
+    "newFamilyName":"optional String",
+    "newCountry":"optional String",
+    "newProvince":"optional String",
+    "newCity":"optional String",
+    "newVisualAccessibility":"optional Boolean",
+    "newHearingAccessibility":"optional Boolean",
+    "newMotorAccessibility":"optional Boolean",
+    "newCognitiveAccessibility":"optional Boolean",
+    "newTeamCaptain":"optional Boolean",
+    "newTeamName":"optional String"
+}

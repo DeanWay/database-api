@@ -24,7 +24,7 @@ def query_db(queryType, query):
         return cur.fetchone() # retrieves the next row of a query result set
         #return cur.fetchall() # retrieves all (or all remaining) rows of a query result set
     except:
-        print "Error: " + query " of type " + queryType + " not found."
+        print "Error: " + query + " of type " + queryType + " not found."
         return None
 
 # EXAMPLE DB STORE FUNCTION
@@ -40,9 +40,7 @@ def store_db(queryType, query, result):
 # sign up user request
 @app.route("/api/v1.0/users/accounts/participants/signup/", methods=["POST"])
 def signup_user():
-    #json_request = open("static/signup.json").read() # testing functionality
-    json_request = request.get_json(silent=True) # POST request body
-    signup_dict = json.loads(json_request)
+    signup_dict = request.get_json(silent=True) # POST request body
 
     # 400 error check for required fields
     if(signup_dict["userName"] == ""):
@@ -106,20 +104,17 @@ def signup_user():
     signup_response["member3"] = ""
     signup_response["member4"] = ""
 
-    return jsonify(signup_response), 200, {"ContentType":"application/json"} 
+    return jsonify(signup_response), 200
 
-# sign in user request
+# log in user request
 @app.route("/api/v1.0/users/accounts/login/", methods=["POST"])
-def signin_user():
-    json_request = request.get_json(silent=True) # POST request body
-    signin_dict = json.loads(json_request)
+def login_user():
+    login_dict = request.get_json(silent=True) # POST request body
 
     # 400 error check for required fields
-    if not isinstance(signin_dict["userId"], int):
+    if(login_dict["userName"] == ""):
         abort(400)
-    if(signin_dict["userName"] == ""):
-        abort(400)
-    if(signin_dict["password"] == ""):
+    if(login_dict["password"] == ""):
         abort(400)
 
     # 403 error check if user and pass in database match
@@ -128,29 +123,28 @@ def signin_user():
     #                    #
 
     # POST response body pulled from database
-    signin_response = {}
-    signin_response["userType"] = ""
-    signin_response["userId"] = ""
-    signin_response["userName"] = ""
-    signin_response["password"] = ""
-    signin_response["email"] = ""
-    signin_response["givenName"] = ""
-    signin_response["familyName"] = ""
-    signin_response["country"] = ""
-    signin_response["province"] = ""
-    signin_response["city"] = ""
-    signin_response["visualAccessibility"] = ""
-    signin_response["hearingAccessibility"] = ""
-    signin_response["motorAccessibility"] = ""
-    signin_response["cognitiveAccessibility"] = ""
+    login_response = {}
+    login_response["userType"] = ""
+    login_response["userId"] = ""
+    login_response["userName"] = ""
+    login_response["password"] = ""
+    login_response["email"] = ""
+    login_response["givenName"] = ""
+    login_response["familyName"] = ""
+    login_response["country"] = ""
+    login_response["province"] = ""
+    login_response["city"] = ""
+    login_response["visualAccessibility"] = ""
+    login_response["hearingAccessibility"] = ""
+    login_response["motorAccessibility"] = ""
+    login_response["cognitiveAccessibility"] = ""
 
-    return jsonify(signin_response), 200, {"ContentType":"application/json"} 
+    return jsonify(login_response), 200, {"ContentType":"application/json"} 
 
 # delete user request
-@app.route("/api/v1.0/users/manage/delete/", methods=["POST"])
+@app.route("/api/v1.0/users/manage/delete/", methods=["DELETE"])
 def delete_user():
-    json_request = request.get_json(silent=True) # POST request body
-    delete_dict = json.loads(json_request)
+    delete_dict = request.get_json(silent=True) # POST request body
 
     # 400 error check for required fields
     if(delete_dict["userName"] == ""):
@@ -165,13 +159,12 @@ def delete_user():
     # ------------------ #
     #                    #
 
-    return json.dumps({"success":True}), 200, {"ContentType":"application/json"}
+    return jsonify({"success":True})
 
 # modify user request
 @app.route("/api/v1.0/users/manage/edit/", methods=["PUT"])
 def modify_user():
-    json_request = request.get_json(silent=True) # POST request body
-    modify_dict = json.loads(json_request)
+    modify_dict = request.get_json(silent=True) # POST request body
 
     # 400 error check for required fields
     if not isinstance(modify_dict["userId"], int):
@@ -182,7 +175,7 @@ def modify_user():
     # ------------------ #
     #                    #
 
-    return json.dumps({"success":True}), 200, {"ContentType":"application/json"}
+    return jsonify({"success":True})
 
 
 
