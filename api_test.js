@@ -43,13 +43,15 @@ fs.readFile('./static/test_files/modify.json', 'utf8', function (err,data) {
 
 //JavaScript implementation of the DOM and HTML standards 
 jsdom.env("", ["http://code.jquery.com/jquery.min.js"], function(err, window) {
-    var $ = window.$
-    $.support.cors = true;
+  var $ = window.$
+  $.support.cors = true;
+
+  var server_path = "http://localhost:5000";
 
   /* test signup */
   $.ajax({
     method: "POST",
-    url: "http://localhost:5000/api/v1.0/users/accounts/participants/signup/",
+    url: server_path + "/api/v1.0/users/accounts/participants/signup/",
     data: signup_json,
     contentType: "application/json; charset=utf-8",
     dataType: "json",
@@ -67,7 +69,7 @@ jsdom.env("", ["http://code.jquery.com/jquery.min.js"], function(err, window) {
   /* test login */
   $.ajax({
     method: "POST",
-    url: "http://localhost:5000/api/v1.0/users/accounts/login/",
+    url: server_path + "/api/v1.0/users/accounts/login/",
     data: login_json,
     contentType: "application/json; charset=utf-8",
     dataType: "json",
@@ -85,7 +87,7 @@ jsdom.env("", ["http://code.jquery.com/jquery.min.js"], function(err, window) {
   /* test delete */
   $.ajax({
     method: "DELETE",
-    url: "http://localhost:5000/api/v1.0/users/manage/delete/",
+    url: server_path + "/api/v1.0/users/manage/delete/",
     data: delete_json,
     contentType: "application/json; charset=utf-8",
     dataType: "json",
@@ -103,7 +105,7 @@ jsdom.env("", ["http://code.jquery.com/jquery.min.js"], function(err, window) {
   /* test modify */
   $.ajax({
     method: "PUT",
-    url: "http://localhost:5000/api/v1.0/users/manage/edit/",
+    url: server_path + "/api/v1.0/users/manage/edit/",
     data: modify_json,
     contentType: "application/json; charset=utf-8",
     dataType: "json",
