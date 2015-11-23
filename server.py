@@ -3,6 +3,39 @@ from flask import Flask, jsonify, abort, request
 
 app = Flask(__name__, static_url_path="/static")
 
+### database ###
+# establish db connection
+def connect_db():
+    global db
+    global cur
+    # the following is purely for example
+    db = MySQLdb.connect(host="dursley.socs.uoguelph.ca", # db host, I DO NOT KNOW IF THIS IS WHAT WE USE, JUST AN EXAMPLE !!!
+                       user="user", # db username
+                       passwd="pass", # db password
+                       db="db_name") # name of the db
+    cur = db.cursor() # this is the cursor used to execute MySQL commands
+    return
+
+# EXAMPLE DB QUERY FUNCTION
+def query_db(queryType, query):
+    try:
+        # example SQL call, command itself is not relevant
+        cur.execute("SELECT column FROM table WHERE queryType LIKE %s AND WHERE queryText LIKE %s", (queryType, query)) # execute("MySQL command", list_of_data)
+        return cur.fetchone() # retrieves the next row of a query result set
+        #return cur.fetchall() # retrieves all (or all remaining) rows of a query result set
+    except:
+        print "Error: " + query " of type " + queryType + " not found."
+        return None
+
+# EXAMPLE DB STORE FUNCTION
+def store_db(queryType, query, result):
+    try:
+        # example SQL call, command itself is not relevant
+        cur.execute("INSERT INTO table WHERE queryType LIKE %s (queryText, column) VALUES (%s, %s)", (queryType, query, result))
+    except:
+        pass
+    return
+
 ### api routing ###
 # sign up user request
 @app.route("/api/v1.0/users/accounts/participants/signup/", methods=["POST"])
@@ -153,7 +186,7 @@ def modify_user():
 
 
 
-# THE FOLLOWING ARE PURELY FOR FLASK EXAMPLES #
+# THE FOLLOWING ARE PURELY FOR EXAMPLES OF USING FLASK FOR INTERACTING WITH A DICTIONARY #
 
 # temporary user dictionary for api testing purposes
 users = [
@@ -231,4 +264,5 @@ def delete(username):
 
 
 if __name__ == "__main__":
+    #connect_db()
     app.run(debug=True)
