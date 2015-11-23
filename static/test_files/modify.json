@@ -1,5 +1,5 @@
 {
-    "userId":1,
+    "userID":1,
     "newPassword":"optional String",
     "newEmail":"optional String",
     "newGivenName":"optional String",

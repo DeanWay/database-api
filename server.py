@@ -165,7 +165,7 @@ def delete_user():
     delete_dict = request.get_json(silent=True) # POST request body
 
     # 400 error check for required fields
-    if(delete_dict["userName"] == ""):
+    if not isinstance(delete_dict["userID"], int):
         abort(400)
     if(delete_dict["userName"] == ""):
         abort(400)
@@ -196,7 +196,8 @@ def modify_user():
     return jsonify({"success":True}), 200, {"ContentType":"application/json"}
 
 
-#Search Routes
+# search Routes
+#### !!! this is not proper parameter passing; looking into this - Matt
 @app.route("/api/v1.0/routes/manage/search[?parameters]", methods=["GET"])
 def search_routes():
     search_dict = request.get_json(silent=True) # POST request body
@@ -232,8 +233,8 @@ def search_routes():
 
     return jsonify(search_response), 200, {"ContentType":"application/json"}
 
-#Join Route
-@app.route("/api/v1.0/routes/manage/join", methods=["PUT"])
+# join route
+@app.route("/api/v1.0/routes/manage/join/", methods=["PUT"])
 def join_route():
     joinRoute_dict = request.get_json(silent=True) # POST request body
 
@@ -274,8 +275,8 @@ def modify_team():
 
     return jsonify({"success":True}), 200, {"ContentType":"application/json"}
 
-#Join Team
-@app.route("/api/v1.0/teams/teamaccounts/join", methods=["PUT"])
+# join team
+@app.route("/api/v1.0/teams/teamaccounts/join/", methods=["PUT"])
 def join_team():
     joinTeam_dict = request.get_json(silent=True) # POST request body
 
@@ -308,8 +309,8 @@ def join_team():
 
     return jsonify(joinTeam_response), 200, {"ContentType":"application/json"}
 
-#Delete Team
-@app.route("/api/v1.0/teams/teamaccounts/delete", methods=["DELETE"])
+# delete team
+@app.route("/api/v1.0/teams/teamaccounts/delete/", methods=["DELETE"])
 def delete_team():
     deleteTeam_dict = request.get_json(silent=True) # POST request body
 
@@ -331,8 +332,8 @@ def delete_team():
 
     return jsonify({"success":True}), 200, {"ContentType":"application/json"}
 
-#Leave Team
-@app.route("/api/v1.0/teams/teamaccounts/leave", methods=["PUT"])
+# leave team
+@app.route("/api/v1.0/teams/teamaccounts/leave/", methods=["PUT"])
 def leave_team():
     leaveTeam_dict = request.get_json(silent=True) # POST request body
 
