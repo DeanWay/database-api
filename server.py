@@ -3,6 +3,9 @@ from flask import Flask, jsonify, abort, request
 
 app = Flask(__name__, static_url_path="/static")
 
+db = None
+cur = None
+
 @app.route("/database")
 def check_db():
     if db is not None:
