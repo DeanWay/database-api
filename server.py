@@ -571,5 +571,5 @@ def delete(username):
 
 if __name__ == "__main__":
     #connect_db()
-    app.run(host="131.104.49.62:5000")
+    app.run(host="131.104.49.62", port=5000)
     #app.run(debug=True)
