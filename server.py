@@ -86,41 +86,40 @@ def signup_user():
             abort(400)
 
     # do MySQL work here #
+    # Check to see if the user is a Team Captain, if they are, immediately create the team first.
     if(signup_dict["teamCaptain"] == True):
         try:
+            # Create the team using the supplied information
             cur.execute("""INSERT INTO Team (teamName, teamViewable, routeID, teamAccessibility)
-                        VALUES (%s, %s, %s, %s)""", (signup_dict["teamName"], signup_dict["teamViewable"], NULL, signup_dict["teamAccessibility"]))
+                        VALUES (%s, %s, %s, %s)""", (signup_dict["teamName"], signup_dict["teamViewable"], None, signup_dict["teamAccessibility"]))
         except:
-            pass
+            abort(404)
 
         try:
-            # example SQL call, command itself is not relevant
+            # Once the team is created, we want to retrieve the information about the team to populate the Json Response later.
             team = cur.execute("SELECT teamID, teamName, teamViewable, routeID, teamAccessibility FROM Team WHERE teamName=%s", (signup_dict["teamName"])) 
-            # execute("MySQL command", list_of_data)
-            #return cur.fetchone() # retrieves the next row of a query result set
-            #return cur.fetchall() # retrieves all (or all remaining) rows of a query result set
         except:
             print "Error: " + signup_dict["teamName"] + " not found."
+            abort(404)
 
     try:
-        # example SQL call, command itself is not relevant
+        # Once the team is created, immediately create the users account using the remaining information.
         cur.execute("""INSERT INTO User (userName, password, email, givenName, familyName, country, province, city, visualAccessibility, 
                     hearingAccessibility, motorAccessibility, cognitiveAccessibility, teamCaptain, teamID) 
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""", 
                     (signup_dict["userName"], signup_dict["password"], signup_dict["email"], signup_dict["givenName"], signup_dict["familyName"],
                     signup_dict["country"], signup_dict["province"], signup_dict["city"], signup_dict["visualAccessibility"], signup_dict["hearingAccessibility"],
-                    signup_dict["motorAccessibility"], signup_dict["cognitiveAccessibility"], signup_dict["teamCaptain"], team[0]))
+                    signup_dict["motorAccessibility"], signup_dict["cognitiveAccessibility"], signup_dict["teamCaptain"], team[0])) # If team[0] is not initialized, it should be "None"-type (maybe...)
     except:
-        pass
+        abort(404)
 
     try:
-        # example SQL call, command itself is not relevant
-        user = cur.fetchall("""SELECT userID, userName, password, email, givenName, familyName, country, province, city, visualAccessibility, 
+        # This will be used to populate the Json Response later.
+        user = cur.execute("""SELECT userID, userName, password, email, givenName, familyName, country, province, city, visualAccessibility, 
                             hearingAccessibility, motorAccessibility, cognitiveAccessibility, teamCaptain, teamID FROM User WHERE userName=%s""", (signup_dict["userName"])) # execute("MySQL command", list_of_data)
-        #return cur.fetchone() # retrieves the next row of a query result set
-        #return cur.fetchall() # retrieves all (or all remaining) rows of a query result set (array of arrays of information)
     except:
         print "Error: " + signup_dict["userName"] + " not found."
+        abort(404)
 
     # POST response body pulled from database
     signup_response = {}
@@ -150,12 +149,11 @@ def signup_user():
     signup_response["teamAccessibility"] = team[3]
 
     try:
-        # example SQL call, command itself is not relevant
+        # retrieves all (or all remaining) rows of a query result set (array of arrays of information)
         teamMembers = cur.fetchall("SELECT userID, userName, email, givenName, familyName, teamCaptain FROM User WHERE teamID=%s", (team[0])) # execute("MySQL command", list_of_data)
-        #return cur.fetchone() # retrieves the next row of a query result set
-        #return cur.fetchall() # retrieves all (or all remaining) rows of a query result set (array of arrays of information)
     except:
         print "Error: " + signup_dict["teamName"] + " not found."
+        abort(404)
 
     for i in range(0,9):
         if teamMembers[i][5] == True:
@@ -182,35 +180,61 @@ def login_user():
 
     # 403 error check if user and pass in database match
     # do MySQL work here #
-    # ------------------ #
-    #                    #
+    try:
+        user = cur.execute("""SELECT userID, userName, password, email, givenName, familyName, country, province, city, visualAccessibility, 
+                            hearingAccessibility, motorAccessibility, cognitiveAccessibility, teamCaptain, teamID FROM User WHERE userName=%s AND password=%s""", 
+                            (login_dict["userName"], login_dict["password"]))
+        login_response = {}
 
-    # POST response body pulled from database
-    login_response = {}
-    login_response["userType"] = ""
-    login_response["userID"] = ""
-    login_response["userName"] = ""
-    login_response["password"] = ""
-    login_response["email"] = ""
-    login_response["givenName"] = ""
-    login_response["familyName"] = ""
-    login_response["country"] = ""
-    login_response["province"] = ""
-    login_response["city"] = ""
-    login_response["visualAccessibility"] = ""
-    login_response["hearingAccessibility"] = ""
-    login_response["motorAccessibility"] = ""
-    login_response["cognitiveAccessibility"] = ""
-    login_response["teamCaptain"] = ""
-    login_response["teamName"] = ""
-    login_response["teamID"] = ""                              #Added this since Team Name can be changed.
-    login_response["teamViewable"] = ""
-    login_response["teamAccessibility"] = ""
-    login_response["teamCaptainName"] = ""                     #The signup may be participant
-    login_response["member1"] = ""
-    login_response["member2"] = ""
-    login_response["member3"] = ""
-    login_response["member4"] = ""
+        if user[13] == True:
+            login_response["userType"] = "CAPTAIN"
+        else:
+            login_response["userType"] = "PARTICIPANT"
+
+        login_response["userID"] = user[0]
+        login_response["userName"] = user[1]
+        login_response["password"] = user[2]
+        login_response["email"] = user[3]
+        login_response["givenName"] = user[4]
+        login_response["familyName"] = user[5]
+        login_response["country"] = user[6]
+        login_response["province"] = user[7]
+        login_response["city"] = user[8]
+        login_response["visualAccessibility"] = user[9]
+        login_response["hearingAccessibility"] = user[10]
+        login_response["motorAccessibility"] = user[11]
+        login_response["cognitiveAccessibility"] = user[12]
+        login_response["teamCaptain"] = user[13]
+        login_response["teamID"] = user[14]
+
+        try:
+            team = cur.execute("SELECT teamID, teamName, teamViewable, routeID, teamAccessibility FROM Team WHERE teamID=%s", (login_dict["teamID"])) 
+        except:
+            print "Error: " + login_dict["teamID"] + " not found."
+            abort(404)
+
+        login_response["teamName"] = team[1]
+        login_response["teamViewable"] = team[2]
+        login_response["teamAccessibility"] = team[3]
+
+        try:
+            teamMembers = cur.fetchall("SELECT userID, userName, email, givenName, familyName, teamCaptain FROM User WHERE teamID=%s", (team[0])) # execute("MySQL command", list_of_data)
+        except:
+            print "Error: " + signup_dict["teamName"] + " not found."
+            abort(404)
+
+        for i in range(0,9):
+            if teamMembers[i][5] == True:
+                login_response["teamCaptainName"] = teamMembers[i]
+                del teamMembers[i]
+
+        login_response["member1"] = teamMembers[0]
+        login_response["member2"] = teamMembers[1]
+        login_response["member3"] = teamMembers[2]
+        login_response["member4"] = teamMembers[3]
+    except:
+        print "Error: " + login_dict["userName"] + " or " + login_dict["password"] + " not found."
+        abort(403)
 
     return jsonify(login_response), 200, {"ContentType":"application/json"} 
 
@@ -229,8 +253,11 @@ def delete_user():
 
     # 403 error check if user id in database match
     # do MySQL work here #
-    # ------------------ #
-    #                    #
+    try:
+        cur.execute("DELETE FROM User WHERE userName=%s AND password=%s", (deleteUser_dict["userName"], deleteUser_dict["password"]))
+    except:
+        print "Error: " + deleteUser_dict["userName"] + " or " + deleteUser_dict["password"] + " not found."
+        abort(403)
 
     return jsonify({"success":True}), 200, {"ContentType":"application/json"}
 
@@ -242,11 +269,66 @@ def modify_user():
     # 400 error check for required fields
     if not isinstance(modifyUser_dict["userID"], int):
         abort(400)
+    if (len(modifyUser_dict) < 2):
+        abort(400)
 
     # 403 error check if user id in database match
     # do MySQL work here #
-    # ------------------ #
-    #                    #
+    if (modifyUser_dict.get("newPassword") != None):
+        try:
+            cur.execute("UPDATE User SET password=%s WHERE userID=%s", (modifyUser_dict["newPassword"], modifyUser_dict["userID"]))
+        except:
+            abort(404)
+    if (modifyUser_dict.get("newEmail") != None):
+        try:
+            cur.execute("UPDATE User SET email=%s WHERE userID=%s", (modifyUser_dict["newEmail"], modifyUser_dict["userID"]))
+        except:
+            abort(404)
+    if (modifyUser_dict.get("newGivenName") != None):
+        try:
+            cur.execute("UPDATE User SET givenName=%s WHERE userID=%s", (modifyUser_dict["newGivenName"], modifyUser_dict["userID"]))
+        except:
+            abort(404)
+    if (modifyUser_dict.get("newFamilyName") != None):
+        try:
+            cur.execute("UPDATE User SET familyName=%s WHERE userID=%s", (modifyUser_dict["newFamilyName"], modifyUser_dict["userID"]))
+        except:
+            abort(404)
+    if (modifyUser_dict.get("newCountry") != None):
+        try:
+            cur.execute("UPDATE User SET country=%s WHERE userID=%s", (modifyUser_dict["newCountry"], modifyUser_dict["userID"]))
+        except:
+            abort(404)
+    if (modifyUser_dict.get("newProvince") != None):
+        try:
+            cur.execute("UPDATE User SET province=%s WHERE userID=%s", (modifyUser_dict["newProvince"], modifyUser_dict["userID"]))
+        except:
+            abort(404)
+    if (modifyUser_dict.get("newCity") != None):
+        try:
+            cur.execute("UPDATE User SET city=%s WHERE userID=%s", (modifyUser_dict["newCity"], modifyUser_dict["userID"]))
+        except:
+            abort(404)
+    if (modifyUser_dict.get("newVisualAccessibility") != None):
+        try:
+            cur.execute("UPDATE User SET visualAccessibility=%s WHERE userID=%s", (modifyUser_dict["newVisualAccessibility"], modifyUser_dict["userID"]))
+        except:
+            abort(404)
+    if (modifyUser_dict.get("newHearingAccessibility") != None):
+        try:
+            cur.execute("UPDATE User SET hearingAccessibility=%s WHERE userID=%s", (modifyUser_dict["newHearingAccessibility"], modifyUser_dict["userID"]))
+        except:
+            abort(404)
+    if (modifyUser_dict.get("newMotorAccessibility") != None):
+        try:
+            cur.execute("UPDATE User SET motorAccessibility=%s WHERE userID=%s", (modifyUser_dict["newMotorAccessibility"], modifyUser_dict["userID"]))
+        except:
+            abort(404)
+    if (modifyUser_dict.get("newCognitiveAccessibility") != None):
+        try:
+            cur.execute("UPDATE User SET cognitiveAccessibility=%s WHERE userID=%s", (modifyUser_dict["newCognitiveAccessibility"], modifyUser_dict["userID"]))
+        except:
+            abort(404)
 
     return jsonify({"success":True}), 200, {"ContentType":"application/json"}
 
