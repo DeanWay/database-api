@@ -1,6 +1,6 @@
 {
     "userID":1,
-    "userName":"user",
+    "userName":"bar_user",
     "teamID":1,
-    "teamName":"teamName"
+    "teamName":"the_foo_bars"
 }

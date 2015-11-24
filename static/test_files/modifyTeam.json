@@ -1,8 +1,8 @@
 {
     "userID":1,
     "teamID":1,
-    "teamName":"teamName",
-    "newTeamName":"newTeamName",
+    "teamName":"the_foo_bars",
+    "newTeamName":"the_bar_foos",
     "newTeamAccessibility":false,
     "newVisualAccessibility":true,
     "newHearingAccessibility":false,

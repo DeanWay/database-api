@@ -1,7 +1,7 @@
 {
     "userID":1,
-    "userName":"user",
-    "password":"pass",
+    "userName":"foo_user",
+    "password":"foo_pass",
     "teamID":1,
-    "teamName":"teamName"
+    "teamName":"the_foo_bars"
 }

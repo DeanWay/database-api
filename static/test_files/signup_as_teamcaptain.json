@@ -1,0 +1,22 @@
+{
+    "userName":"foo_user",
+    "password":"foo_pass",
+    "email":"foo@email.com",
+    "givenName":"foo",
+    "familyName":"bar",
+    "country":"foobar",
+    "province":"barfoo",
+    "city":"boofar",
+    "visualAccessibility":false,
+    "hearingAccessibility":false,
+    "motorAccessibility":false,
+    "cognitiveAccessibility":false,
+    "teamCaptain":true,
+    "teamViewable":false,
+    "teamAccessibility":false,
+    "teamName":"the_foo_bars",
+    "member1":"foo",
+    "member2":"bar",
+    "member3":"boo",
+    "member4":"far"
+}
