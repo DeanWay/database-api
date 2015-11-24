@@ -584,5 +584,5 @@ def delete(username):
 
 
 if __name__ == "__main__":
-    #connect_db()
+    connect_db()
     app.run()
