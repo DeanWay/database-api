@@ -4,34 +4,21 @@ from flask import Flask, jsonify, abort, request
 app = Flask(__name__, static_url_path="/static")
 
 db = None
-cur = None
-
-@app.route("/database")
-def check_db():
-    if db is not None:
-        return "Connected!"
-    else:
-        return "Not connected!"
 
 ### database ###
 # establish db connection
 @app.before_request
 def connect_db():
     global db
-    global cur
     db = MySQLdb.connect(host="localhost", # db host
                        user="root", # db username
                        passwd="PositiveFish", # db password
                        db="serverus") # name of the db
-    cur = db.cursor() # this is the cursor used to execute MySQL commands
     return
 
 @app.teardown_request
 def db_disconnect(exception=None):
-    global db
-    global cur
     db.close()
-    cur.close()
 
 # EXAMPLE DB QUERY FUNCTION
 def query_db(queryType, query):
@@ -57,10 +44,11 @@ def store_db(queryType, query, result):
 # sign up user request
 @app.route("/v1.0/users/accounts/participants/signup", methods=["POST"])
 def signup_user():
+    cur = db.cursor() # local cursor
     signup_dict = request.get_json(silent=True) # POST request body
 
     # 400 error check for required fields
-    if(signup_dict["userName"] == ""):
+    if(signup_dict["userName"] == "" or signup_dict["password"] == "" or signup_dict["email"] == ""):
         abort(400)
     if(signup_dict["password"] == ""):
         abort(400)
@@ -100,6 +88,7 @@ def signup_user():
 
     # do MySQL work here #
     # Check to see if the user is a Team Captain, if they are, immediately create the team first.
+    team = []
     if(signup_dict["teamCaptain"] == True):
         try:
             # Create the team using the supplied information
@@ -116,6 +105,9 @@ def signup_user():
             abort(404)
 
     try:
+        if not team:
+            team.append("NULL")
+
         # Once the team is created, immediately create the users account using the remaining information.
         cur.execute("""INSERT INTO User (userName, password, email, givenName, familyName, country, province, city, visualAccessibility, 
                     hearingAccessibility, motorAccessibility, cognitiveAccessibility, teamCaptain, teamID) 
@@ -178,6 +170,7 @@ def signup_user():
     signup_response["member3"] = teamMembers[2]
     signup_response["member4"] = teamMembers[3]
 
+    cur.close() # close cursor
     return jsonify(signup_response), 200, {"ContentType":"application/json"}
 
 # log in user request
