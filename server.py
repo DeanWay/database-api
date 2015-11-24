@@ -3,6 +3,13 @@ from flask import Flask, jsonify, abort, request
 
 app = Flask(__name__, static_url_path="/static")
 
+@app.route("/database")
+def check_db():
+    if(db != None):
+        return "Connected!"
+    else:
+        return "Not connected!"
+
 ### database ###
 # establish db connection
 def connect_db():
