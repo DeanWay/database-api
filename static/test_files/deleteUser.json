@@ -1,6 +1,6 @@
 {
   "userID":1,
-  "userName":"user",
-  "password":"password",
-  "email":"user@email.com"
+  "userName":"foo_user",
+  "password":"foo_pass",
+  "email":"foo@email.com"
 }
