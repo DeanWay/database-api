@@ -103,7 +103,7 @@ def signup_user():
 
     try:
         # example SQL call, command itself is not relevant
-        user = cur.execute("""INSERT INTO User (userName, password, email, givenName, familyName, country, province, city, visualAccessibility, 
+        cur.execute("""INSERT INTO User (userName, password, email, givenName, familyName, country, province, city, visualAccessibility, 
                     hearingAccessibility, motorAccessibility, cognitiveAccessibility, teamCaptain, teamID) 
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""", 
                     [
@@ -113,6 +113,15 @@ def signup_user():
                     ])
     except:
         pass
+
+    try:
+        # example SQL call, command itself is not relevant
+        user = cur.fetchall("""SELECT userID, userName, password, email, givenName, familyName, country, province, city, visualAccessibility, 
+                                    hearingAccessibility, motorAccessibility, cognitiveAccessibility, teamCaptain, teamID FROM User WHERE userName=%s""", (signup_dict["userName"])) # execute("MySQL command", list_of_data)
+        #return cur.fetchone() # retrieves the next row of a query result set
+        #return cur.fetchall() # retrieves all (or all remaining) rows of a query result set (array of arrays of information)
+    except:
+        print "Error: " + signup_dict["userName"] + " not found."
 
     # POST response body pulled from database
     signup_response = {}
