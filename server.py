@@ -82,35 +82,86 @@ def signup_user():
             abort(400)
 
     # do MySQL work here #
-    # ------------------ #
-    #                    #
+    if(signup_dict["teamCaptain"] == True):
+        try:
+            cur.execute("""INSERT INTO Team (teamName, teamViewable, routeID, teamAccessibility)
+                        VALUES (%s, %s, %s, %s)""", (signup_dict["teamName"], signup_dict["teamViewable"], NULL, signup_dict["teamAccessibility"]))
+        except:
+            pass
+
+        try:
+            # example SQL call, command itself is not relevant
+            team = cur.execute("SELECT teamID, teamName, teamViewable, routeID, teamAccessibility FROM Team WHERE teamName=%s", (signup_dict["teamName"])) 
+            # execute("MySQL command", list_of_data)
+            #return cur.fetchone() # retrieves the next row of a query result set
+            #return cur.fetchall() # retrieves all (or all remaining) rows of a query result set
+        except:
+            print "Error: " + signup_dict["teamName"] + " not found."
+
+    try:
+        # example SQL call, command itself is not relevant
+        cur.execute("""INSERT INTO User (userName, password, email, givenName, familyName, country, province, city, visualAccessibility, 
+                    hearingAccessibility, motorAccessibility, cognitiveAccessibility, teamCaptain, teamID) 
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""", 
+                    (signup_dict["userName"], signup_dict["password"], signup_dict["email"], signup_dict["givenName"], signup_dict["familyName"],
+                    signup_dict["country"], signup_dict["province"], signup_dict["city"], signup_dict["visualAccessibility"], signup_dict["hearingAccessibility"],
+                    signup_dict["motorAccessibility"], signup_dict["cognitiveAccessibility"], signup_dict["teamCaptain"], team[0]))
+    except:
+        pass
+
+    try:
+        # example SQL call, command itself is not relevant
+        user = cur.fetchall("""SELECT userID, userName, password, email, givenName, familyName, country, province, city, visualAccessibility, 
+                            hearingAccessibility, motorAccessibility, cognitiveAccessibility, teamCaptain, teamID FROM User WHERE userName=%s""", (signup_dict["userName"])) # execute("MySQL command", list_of_data)
+        #return cur.fetchone() # retrieves the next row of a query result set
+        #return cur.fetchall() # retrieves all (or all remaining) rows of a query result set (array of arrays of information)
+    except:
+        print "Error: " + signup_dict["userName"] + " not found."
 
     # POST response body pulled from database
     signup_response = {}
-    signup_response["userType"] = ""
-    signup_response["userID"] = ""
-    signup_response["userName"] = ""
-    signup_response["password"] = ""
-    signup_response["email"] = ""
-    signup_response["givenName"] = ""
-    signup_response["familyName"] = ""
-    signup_response["country"] = ""
-    signup_response["province"] = ""
-    signup_response["city"] = ""
-    signup_response["visualAccessibility"] = ""
-    signup_response["hearingAccessibility"] = ""
-    signup_response["motorAccessibility"] = ""
-    signup_response["cognitiveAccessibility"] = ""
-    signup_response["teamCaptain"] = ""
-    signup_response["teamName"] = ""
-    signup_response["teamID"] = ""                              #Added this since Team Name can be changed.
-    signup_response["teamViewable"] = ""
-    signup_response["teamAccessibility"] = ""
-    signup_response["teamCaptainName"] = ""                     #The signup may be participant
-    signup_response["member1"] = ""
-    signup_response["member2"] = ""
-    signup_response["member3"] = ""
-    signup_response["member4"] = ""
+    if user[13] == True:
+        signup_response["userType"] = "CAPTAIN"
+    else:
+        signup_response["userType"] = "PARTICIPANT"
+
+    signup_response["userID"] = user[0]
+    signup_response["userName"] = user[1]
+    signup_response["password"] = user[2]
+    signup_response["email"] = user[3]
+    signup_response["givenName"] = user[4]
+    signup_response["familyName"] = user[5]
+    signup_response["country"] = user[6]
+    signup_response["province"] = user[7]
+    signup_response["city"] = user[8]
+    signup_response["visualAccessibility"] = user[9]
+    signup_response["hearingAccessibility"] = user[10]
+    signup_response["motorAccessibility"] = user[11]
+    signup_response["cognitiveAccessibility"] = user[12]
+    signup_response["teamCaptain"] = user[13]
+    signup_response["teamID"] = team[0]
+
+    signup_response["teamName"] = team[1]
+    signup_response["teamViewable"] = team[2]
+    signup_response["teamAccessibility"] = team[3]
+
+    try:
+        # example SQL call, command itself is not relevant
+        teamMembers = cur.fetchall("SELECT userID, userName, email, givenName, familyName, teamCaptain FROM User WHERE teamID=%s", (team[0])) # execute("MySQL command", list_of_data)
+        #return cur.fetchone() # retrieves the next row of a query result set
+        #return cur.fetchall() # retrieves all (or all remaining) rows of a query result set (array of arrays of information)
+    except:
+        print "Error: " + signup_dict["teamName"] + " not found."
+
+    for i in range(0,9):
+        if teamMembers[i][5] == True:
+            signup_response["teamCaptainName"] = teamMembers[i]
+            del teamMembers[i]
+
+    signup_response["member1"] = teamMembers[0]
+    signup_response["member2"] = teamMembers[1]
+    signup_response["member3"] = teamMembers[2]
+    signup_response["member4"] = teamMembers[3]
 
     return jsonify(signup_response), 200, {"ContentType":"application/json"}
 
