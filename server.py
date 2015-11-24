@@ -3,10 +3,6 @@ from flask import Flask, jsonify, abort, request
 
 app = Flask(__name__, static_url_path="/static")
 
-@app.route("/")
-def hello():
-    return "Hello world"
-
 ### database ###
 # establish db connection
 def connect_db():
@@ -42,7 +38,7 @@ def store_db(queryType, query, result):
 
 ### api routing ###
 # sign up user request
-@app.route("/api/v1.0/users/accounts/participants/signup", methods=["POST"])
+@app.route("/v1.0/users/accounts/participants/signup", methods=["POST"])
 def signup_user():
     signup_dict = request.get_json(silent=True) # POST request body
 
@@ -168,7 +164,7 @@ def signup_user():
     return jsonify(signup_response), 200, {"ContentType":"application/json"}
 
 # log in user request
-@app.route("/api/v1.0/users/accounts/login", methods=["POST"])
+@app.route("/v1.0/users/accounts/login", methods=["POST"])
 def login_user():
     login_dict = request.get_json(silent=True) # POST request body
 
@@ -239,7 +235,7 @@ def login_user():
     return jsonify(login_response), 200, {"ContentType":"application/json"} 
 
 # delete user request
-@app.route("/api/v1.0/users/manage/delete", methods=["DELETE"])
+@app.route("/v1.0/users/manage/delete", methods=["DELETE"])
 def delete_user():
     deleteUser_dict = request.get_json(silent=True) # POST request body
 
@@ -262,7 +258,7 @@ def delete_user():
     return jsonify({"success":True}), 200, {"ContentType":"application/json"}
 
 # modify user request
-@app.route("/api/v1.0/users/manage/edit", methods=["PUT"])
+@app.route("/v1.0/users/manage/edit", methods=["PUT"])
 def modify_user():
     modifyUser_dict = request.get_json(silent=True) # POST request body
 
@@ -335,7 +331,7 @@ def modify_user():
 
 # search Routes
 #### !!! this is not proper parameter passing; looking into this - Matt
-@app.route("/api/v1.0/routes/manage/search", methods=["GET"])
+@app.route("/v1.0/routes/manage/search", methods=["GET"])
 def search_routes():
     username = request.args.get('username')
     print username
@@ -373,7 +369,7 @@ def search_routes():
     return jsonify(search_response), 200, {"ContentType":"application/json"}
 
 # join route
-@app.route("/api/v1.0/routes/manage/join", methods=["PUT"])
+@app.route("/v1.0/routes/manage/join", methods=["PUT"])
 def join_route():
     joinRoute_dict = request.get_json(silent=True) # POST request body
 
@@ -396,7 +392,7 @@ def join_route():
     return jsonify({"success":True}), 200, {"ContentType":"application/json"}
 
 # modify team
-@app.route("/api/v1.0/teams/teamaccounts/edit", methods=["PUT"])
+@app.route("/v1.0/teams/teamaccounts/edit", methods=["PUT"])
 def modify_team():
     modifyTeam_dict = request.get_json(silent=True) # POST request body
     
@@ -415,7 +411,7 @@ def modify_team():
     return jsonify({"success":True}), 200, {"ContentType":"application/json"}
 
 # join team
-@app.route("/api/v1.0/teams/teamaccounts/join", methods=["PUT"])
+@app.route("/v1.0/teams/teamaccounts/join", methods=["PUT"])
 def join_team():
     joinTeam_dict = request.get_json(silent=True) # POST request body
 
@@ -449,7 +445,7 @@ def join_team():
     return jsonify(joinTeam_response), 200, {"ContentType":"application/json"}
 
 # delete team
-@app.route("/api/v1.0/teams/teamaccounts/delete", methods=["DELETE"])
+@app.route("/v1.0/teams/teamaccounts/delete", methods=["DELETE"])
 def delete_team():
     deleteTeam_dict = request.get_json(silent=True) # POST request body
 
@@ -472,7 +468,7 @@ def delete_team():
     return jsonify({"success":True}), 200, {"ContentType":"application/json"}
 
 # leave team
-@app.route("/api/v1.0/teams/teamaccounts/leave", methods=["PUT"])
+@app.route("/v1.0/teams/teamaccounts/leave", methods=["PUT"])
 def leave_team():
     leaveTeam_dict = request.get_json(silent=True) # POST request body
 
@@ -571,5 +567,4 @@ def delete(username):
 
 if __name__ == "__main__":
     #connect_db()
-    app.run(host="131.104.49.62", port=5000)
-    #app.run(debug=True)
+    app.run()
