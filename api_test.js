@@ -83,6 +83,7 @@ jsdom.env("", ["http://code.jquery.com/jquery.min.js"], function(err, window) {
   $.support.cors = true;
 
   var server_path = "http://131.104.49.62:5000";
+  //var server_path = "http://localhost:5000"
 
   /* test signup */
   $.ajax({

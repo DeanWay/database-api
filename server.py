@@ -3,6 +3,10 @@ from flask import Flask, jsonify, abort, request
 
 app = Flask(__name__, static_url_path="/static")
 
+@app.route("/")
+def hello():
+    return "Hello world"
+
 ### database ###
 # establish db connection
 def connect_db():
@@ -485,4 +489,5 @@ def delete(username):
 
 if __name__ == "__main__":
     #connect_db()
-    app.run(host="131.104.49.62", port=5000, debug=True)
+    app.run(host="131.104.49.62:5000")
+    #app.run(debug=True)
