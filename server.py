@@ -95,13 +95,14 @@ def signup_user():
             cur.execute("""INSERT INTO Team (teamName, teamViewable, routeID, teamAccessibility)
                         VALUES (%s, %s, %s, %s)""", (signup_dict["teamName"], signup_dict["teamViewable"], None, signup_dict["teamAccessibility"]))
         except:
+            return jsonify({"teamCreate":False}), 200, {"ContentType":"application/json"}
             abort(404)
 
         try:
             # Once the team is created, we want to retrieve the information about the team to populate the Json Response later.
             team = cur.execute("SELECT teamID, teamName, teamViewable, routeID, teamAccessibility FROM Team WHERE teamName=%s", (signup_dict["teamName"])) 
         except:
-            print "Error: " + signup_dict["teamName"] + " not found."
+            return jsonify({"retrieveTeam":False}), 200, {"ContentType":"application/json"}
             abort(404)
 
     try:
@@ -116,6 +117,7 @@ def signup_user():
                     signup_dict["country"], signup_dict["province"], signup_dict["city"], signup_dict["visualAccessibility"], signup_dict["hearingAccessibility"],
                     signup_dict["motorAccessibility"], signup_dict["cognitiveAccessibility"], signup_dict["teamCaptain"], team[0])) # If team[0] is not initialized, it should be "None"-type (maybe...)
     except:
+        return jsonify({"userCreate":False}), 200, {"ContentType":"application/json"}
         abort(404)
 
     try:
@@ -123,7 +125,7 @@ def signup_user():
         user = cur.execute("""SELECT userID, userName, password, email, givenName, familyName, country, province, city, visualAccessibility, 
                             hearingAccessibility, motorAccessibility, cognitiveAccessibility, teamCaptain, teamID FROM User WHERE userName=%s""", (signup_dict["userName"])) # execute("MySQL command", list_of_data)
     except:
-        print "Error: " + signup_dict["userName"] + " not found."
+        return jsonify({"retrieveUser":False}), 200, {"ContentType":"application/json"}
         abort(404)
 
     # POST response body pulled from database
@@ -157,7 +159,7 @@ def signup_user():
         # retrieves all (or all remaining) rows of a query result set (array of arrays of information)
         teamMembers = cur.fetchall("SELECT userID, userName, email, givenName, familyName, teamCaptain FROM User WHERE teamID=%s", (team[0])) # execute("MySQL command", list_of_data)
     except:
-        print "Error: " + signup_dict["teamName"] + " not found."
+        return jsonify({"retrieveMembers":False}), 200, {"ContentType":"application/json"}
         abort(404)
 
     for i in range(0,9):
