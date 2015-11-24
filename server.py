@@ -93,7 +93,7 @@ def signup_user():
         try:
             # Create the team using the supplied information
             cur.execute("""INSERT INTO Team (teamName, teamViewable, routeID, teamAccessibility)
-                        VALUES (%s, %s, %s, %s)""", (signup_dict["teamName"], signup_dict["teamViewable"], None, signup_dict["teamAccessibility"]))
+                        VALUES (%s, %s, %s, %s)""", (signup_dict["teamName"], signup_dict["teamViewable"], "NULL", signup_dict["teamAccessibility"]))
         except:
             return jsonify({"teamCreate":False}), 200, {"ContentType":"application/json"}
             abort(404)
