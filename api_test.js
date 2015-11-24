@@ -82,12 +82,12 @@ jsdom.env("", ["http://code.jquery.com/jquery.min.js"], function(err, window) {
   var $ = window.$
   $.support.cors = true;
 
-  var server_path = "http://localhost:5000";
+  var server_path = "http://131.104.49.62:5000";
 
   /* test signup */
   $.ajax({
     method: "POST",
-    url: server_path + "/api/v1.0/users/accounts/participants/signup/",
+    url: server_path + "/api/v1.0/users/accounts/participants/signup?username=test",
     data: signup_json,
     contentType: "application/json; charset=utf-8",
     dataType: "json",

@@ -38,7 +38,7 @@ def store_db(queryType, query, result):
 
 ### api routing ###
 # sign up user request
-@app.route("/api/v1.0/users/accounts/participants/signup/", methods=["POST"])
+@app.route("/api/v1.0/users/accounts/participants/signup", methods=["POST"])
 def signup_user():
     signup_dict = request.get_json(silent=True) # POST request body
 
@@ -200,6 +200,8 @@ def modify_user():
 #### !!! this is not proper parameter passing; looking into this - Matt
 @app.route("/api/v1.0/routes/manage/search[?parameters]", methods=["GET"])
 def search_routes():
+    username = request.args.get('username')
+    print username
     search_dict = request.get_json(silent=True) # POST request body
 
     # 400 error check for required fields
@@ -432,4 +434,4 @@ def delete(username):
 
 if __name__ == "__main__":
     #connect_db()
-    app.run(debug=True)
+    app.run(host="131.104.49.62", port=5000, debug=True)
