@@ -85,10 +85,7 @@ def signup_user():
     if(signup_dict["teamCaptain"] == True):
         try:
             cur.execute("""INSERT INTO Team (teamName, teamViewable, routeID, teamAccessibility)
-                        VALUES (%s, %s, %s, %s)""",
-                        [
-                        (signup_dict["teamName"], signup_dict["teamViewable"], NULL, signup_dict["teamAccessibility"])
-                        ])
+                        VALUES (%s, %s, %s, %s)""", (signup_dict["teamName"], signup_dict["teamViewable"], NULL, signup_dict["teamAccessibility"]))
         except:
             pass
 
@@ -106,18 +103,16 @@ def signup_user():
         cur.execute("""INSERT INTO User (userName, password, email, givenName, familyName, country, province, city, visualAccessibility, 
                     hearingAccessibility, motorAccessibility, cognitiveAccessibility, teamCaptain, teamID) 
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""", 
-                    [
                     (signup_dict["userName"], signup_dict["password"], signup_dict["email"], signup_dict["givenName"], signup_dict["familyName"],
                     signup_dict["country"], signup_dict["province"], signup_dict["city"], signup_dict["visualAccessibility"], signup_dict["hearingAccessibility"],
-                    signup_dict["motorAccessibility"], signup_dict["cognitiveAccessibility"], signup_dict["teamCaptain"], team[0])
-                    ])
+                    signup_dict["motorAccessibility"], signup_dict["cognitiveAccessibility"], signup_dict["teamCaptain"], team[0]))
     except:
         pass
 
     try:
         # example SQL call, command itself is not relevant
         user = cur.fetchall("""SELECT userID, userName, password, email, givenName, familyName, country, province, city, visualAccessibility, 
-                                    hearingAccessibility, motorAccessibility, cognitiveAccessibility, teamCaptain, teamID FROM User WHERE userName=%s""", (signup_dict["userName"])) # execute("MySQL command", list_of_data)
+                            hearingAccessibility, motorAccessibility, cognitiveAccessibility, teamCaptain, teamID FROM User WHERE userName=%s""", (signup_dict["userName"])) # execute("MySQL command", list_of_data)
         #return cur.fetchone() # retrieves the next row of a query result set
         #return cur.fetchall() # retrieves all (or all remaining) rows of a query result set (array of arrays of information)
     except:
