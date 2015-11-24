@@ -15,16 +15,23 @@ def check_db():
 
 ### database ###
 # establish db connection
+@app.before_request
 def connect_db():
     global db
     global cur
-    # the following is purely for example
     db = MySQLdb.connect(host="localhost", # db host
                        user="root", # db username
                        passwd="PositiveFish", # db password
                        db="serverus") # name of the db
     cur = db.cursor() # this is the cursor used to execute MySQL commands
     return
+
+@app.teardown_request
+def db_disconnect(exception=None):
+    global db
+    global cur
+    db.close()
+    cur.close()
 
 # EXAMPLE DB QUERY FUNCTION
 def query_db(queryType, query):
