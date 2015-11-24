@@ -100,22 +100,24 @@ def signup_user():
 
         try:
             # Once the team is created, we want to retrieve the information about the team to populate the Json Response later.
-            team = cur.execute("SELECT teamID, teamName, teamViewable, routeID, teamAccessibility FROM Team WHERE teamName=%s", (signup_dict["teamName"])) 
+            cur.execute("SELECT teamID, teamName, teamViewable, routeID, teamAccessibility FROM Team WHERE teamName=%s", (signup_dict["teamName"]))
+            team = cur.fetchall()
         except:
             return jsonify({"retrieveTeam":False}), 200, {"ContentType":"application/json"}
             abort(404)
 
     try:
+        print team
         if not team:
             team.append("NULL")
 
         # Once the team is created, immediately create the users account using the remaining information.
         cur.execute("""INSERT INTO User (userName, password, email, givenName, familyName, country, province, city, visualAccessibility, 
                     hearingAccessibility, motorAccessibility, cognitiveAccessibility, teamCaptain, teamID) 
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""", 
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""", 
                     (signup_dict["userName"], signup_dict["password"], signup_dict["email"], signup_dict["givenName"], signup_dict["familyName"],
                     signup_dict["country"], signup_dict["province"], signup_dict["city"], signup_dict["visualAccessibility"], signup_dict["hearingAccessibility"],
-                    signup_dict["motorAccessibility"], signup_dict["cognitiveAccessibility"], signup_dict["teamCaptain"], team[0])) # If team[0] is not initialized, it should be "None"-type (maybe...)
+                    signup_dict["motorAccessibility"], signup_dict["cognitiveAccessibility"], signup_dict["teamCaptain"], team[0][0])) # If team[0][0] is not initialized, it should be "None"-type (maybe...)
     except:
         return jsonify({"userCreate":False}), 200, {"ContentType":"application/json"}
         abort(404)
