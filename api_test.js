@@ -87,7 +87,7 @@ jsdom.env("", ["http://code.jquery.com/jquery.min.js"], function(err, window) {
   /* test signup */
   $.ajax({
     method: "POST",
-    url: server_path + "/api/v1.0/users/accounts/participants/signup?username=test",
+    url: server_path + "/api/v1.0/users/accounts/participants/signup",
     data: signup_json,
     contentType: "application/json; charset=utf-8",
     dataType: "json",
@@ -105,7 +105,7 @@ jsdom.env("", ["http://code.jquery.com/jquery.min.js"], function(err, window) {
   /* test login */
   $.ajax({
     method: "POST",
-    url: server_path + "/api/v1.0/users/accounts/login/",
+    url: server_path + "/api/v1.0/users/accounts/login",
     data: login_json,
     contentType: "application/json; charset=utf-8",
     dataType: "json",
@@ -123,7 +123,7 @@ jsdom.env("", ["http://code.jquery.com/jquery.min.js"], function(err, window) {
   /* test delete user */
   $.ajax({
     method: "DELETE",
-    url: server_path + "/api/v1.0/users/manage/delete/",
+    url: server_path + "/api/v1.0/users/manage/delete",
     data: deleteUser_json,
     contentType: "application/json; charset=utf-8",
     dataType: "json",
@@ -141,7 +141,7 @@ jsdom.env("", ["http://code.jquery.com/jquery.min.js"], function(err, window) {
   /* test modify user */
   $.ajax({
     method: "PUT",
-    url: server_path + "/api/v1.0/users/manage/edit/",
+    url: server_path + "/api/v1.0/users/manage/edit",
     data: modifyUser_json,
     contentType: "application/json; charset=utf-8",
     dataType: "json",
@@ -159,7 +159,7 @@ jsdom.env("", ["http://code.jquery.com/jquery.min.js"], function(err, window) {
   /* test modify team */
   $.ajax({
     method: "PUT",
-    url: server_path + "/api/v1.0/teams/teamaccounts/edit/",
+    url: server_path + "/api/v1.0/teams/teamaccounts/edit",
     data: modifyTeam_json,
     contentType: "application/json; charset=utf-8",
     dataType: "json",
@@ -177,7 +177,7 @@ jsdom.env("", ["http://code.jquery.com/jquery.min.js"], function(err, window) {
   /* test join team */
   $.ajax({
     method: "PUT",
-    url: server_path + "/api/v1.0/teams/teamaccounts/join/",
+    url: server_path + "/api/v1.0/teams/teamaccounts/join",
     data: joinTeam_json,
     contentType: "application/json; charset=utf-8",
     dataType: "json",
@@ -195,7 +195,7 @@ jsdom.env("", ["http://code.jquery.com/jquery.min.js"], function(err, window) {
   /* test delete team */
   $.ajax({
     method: "DELETE",
-    url: server_path + "/api/v1.0/teams/teamaccounts/delete/",
+    url: server_path + "/api/v1.0/teams/teamaccounts/delete",
     data: deleteTeam_json,
     contentType: "application/json; charset=utf-8",
     dataType: "json",
@@ -213,7 +213,7 @@ jsdom.env("", ["http://code.jquery.com/jquery.min.js"], function(err, window) {
   /* test leave team */
   $.ajax({
     method: "PUT",
-    url: server_path + "/api/v1.0/teams/teamaccounts/leave/",
+    url: server_path + "/api/v1.0/teams/teamaccounts/leave",
     data: leaveTeam_json,
     contentType: "application/json; charset=utf-8",
     dataType: "json",
