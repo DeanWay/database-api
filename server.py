@@ -5,7 +5,7 @@ app = Flask(__name__, static_url_path="/static")
 
 @app.route("/database")
 def check_db():
-    if(db != None):
+    if db is not None:
         return "Connected!"
     else:
         return "Not connected!"
