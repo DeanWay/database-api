@@ -9,10 +9,10 @@ def connect_db():
     global db
     global cur
     # the following is purely for example
-    db = MySQLdb.connect(host="dursley.socs.uoguelph.ca", # db host, I DO NOT KNOW IF THIS IS WHAT WE USE, JUST AN EXAMPLE !!!
-                       user="user", # db username
-                       passwd="pass", # db password
-                       db="db_name") # name of the db
+    db = MySQLdb.connect(host="localhost", # db host
+                       user="root", # db username
+                       passwd="PositiveFish", # db password
+                       db="serverus") # name of the db
     cur = db.cursor() # this is the cursor used to execute MySQL commands
     return
 
@@ -330,15 +330,32 @@ def modify_user():
 
 
 # search Routes
-#### !!! this is not proper parameter passing; looking into this - Matt
 @app.route("/v1.0/routes/manage/search", methods=["GET"])
 def search_routes():
-    username = request.args.get('username')
-    print username
+    # parameters
+    if "routeID" in request.args:
+        param_routeID = request.args.get(routeID)
+    if "routeName" in request.args:
+        param_routeName = request.args.get(routeName)
+    if "teamName" in request.args:
+        param_teamName = request.args.get(teamName)
+    if "teamID" in request.args:
+        param_teamID = request.args.get(teamID)
+    if "routeType" in request.args:
+        param_routeType = request.args.get(routeType)
+    if "visualAccessibility" in request.args:
+        param_visualAccessibility = request.args.get(visualAccessibility)
+    if "hearingAccessibility" in request.args:
+        param_hearingAccessibility = request.args.get(hearingAccessibility)
+    if "motorAccessibility" in request.args:
+        param_motorAccessibility = request.args.get(motorAccessibility)
+    if "cognitiveAccessibility" in request.args:
+        param_cognitiveAccessibility = request.args.get(cognitiveAccessibility)
+
     search_dict = request.get_json(silent=True) # POST request body
 
     # 400 error check for required fields
-    #I'm not sure how to deal with this
+    # I'm not sure how to deal with this
 
     # 403 error check if creating user id in database match
     # do MySQL work here #
@@ -346,6 +363,7 @@ def search_routes():
     #                    #
 
     # GET response body pulled from database
+    # NOTE! THIS SHOULD LOOP AND RETURN MULTIPLE ROUTES
     search_response = {}
     search_response["routeName"] = ""
     search_response["routeID"] = ""
@@ -516,7 +534,7 @@ def get(username):
     return jsonify({"user": user[0]}) # returns json of single user
 
 # create new user in database
-@app.route("/trickoreat/api/v1.0/users/", methods=["POST"])
+@app.route("/trickoreat/api/v1.0/users", methods=["POST"])
 def create():
     # MySQL calls to create data normally goes here
     # example user create, this only requires a username so it"s extremely primitive and needs to be incorporated based on the MySQL database 
